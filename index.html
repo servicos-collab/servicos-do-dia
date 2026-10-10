@@ -176,6 +176,7 @@ tbody tr:hover{background:var(--surface-2)}
 .hb .tr div{height:100%;border-radius:4px;background:var(--bar)}
 .callout{margin:6px 20px 18px;border:1px solid var(--brand);background:var(--brand-soft);color:var(--brand-ink);border-radius:10px;padding:12px 14px;font-weight:600;font-size:13px;display:flex;gap:10px;align-items:flex-start}
 .callout::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;margin-top:5px;flex:none}
+.cancel-note{background:var(--neutral-bg);color:var(--text-2);border-radius:10px;padding:10px 14px;font-size:13px}
 .alert{background:var(--warn-bg);color:var(--warn-tx);border-radius:10px;padding:10px 14px;font-weight:500}
 
 /* pódios */
@@ -289,6 +290,7 @@ tbody tr:hover{background:var(--surface-2)}
 
       <div id="dash" class="hidden" style="display:flex;flex-direction:column;gap:18px">
         <div id="alerts"></div>
+        <div id="cancelNote"></div>
 
         <div class="kpis" id="visao">
           <div class="card kpi"><div class="l">Total em serviços</div><div class="v" id="kTotal">–</div><div class="s"><span id="kTotalS"></span></div></div>
@@ -462,6 +464,7 @@ function process(rows){
       entrega:r[k+9]??'', vendedor:String(r[k+11]??''), frete:toNum(r[k+12])||0
     };
     it.servico=isService(it.statusItem,it.desc);
+    it.cancelado=/CANCEL/.test(norm(it.statusPedido))||/CANCEL/.test(norm(it.statusItem));
     it.vendedorNome=cap(it.vendedor.replace(/^\d+\s*-\s*/,'')) || 'Sem vendedor';
     ALL.push(it);
     const o=ORDERS[it.pedido] ||= {soma:0,valor:it.valorPedido};
@@ -489,7 +492,8 @@ function process(rows){
   render();
 }
 
-function servicesOfDay(){ return ALL.filter(i=>i.servico && i.date===state.date); }
+function servicesOfDay(){ return ALL.filter(i=>i.servico && !i.cancelado && i.date===state.date); }
+function canceledOfDay(){ return ALL.filter(i=>i.servico && i.cancelado && i.date===state.date && (state.chan==='Todos'||i.canal===state.chan)); }
 function current(){ return servicesOfDay().filter(i=>state.chan==='Todos'||i.canal===state.chan); }
 function groupBy(list,key){ const m={}; for(const i of list){ const k=key(i); const g=m[k] ||= {k,valor:0,n:0,pedidos:new Set(),itens:[]}; g.valor+=i.total; g.n++; g.pedidos.add(i.pedido); g.itens.push(i); } return Object.values(m).sort((a,b)=>b.valor-a.valor); }
 function statusClass(s){ const n=norm(s); if(/FATURAD|CONCLU|FINALIZ|EXECUTAD/.test(n)) return 'good'; if(/NAO INICI|PENDEN|AGUARD/.test(n)) return 'warn'; return 'neutral'; }
@@ -505,6 +509,8 @@ function render(){
   $('chanSeg').querySelectorAll('button').forEach(b=>b.onclick=()=>{ state.chan=b.dataset.c; state.sec=null; render(); });
 
   const svc=current();
+  const canc=canceledOfDay();
+  $('cancelNote').innerHTML=canc.length?`<div class="cancel-note">${canc.length} ${canc.length===1?'serviço de pedido cancelado foi desconsiderado':'serviços de pedidos cancelados foram desconsiderados'} (${BRL.format(canc.reduce((s,i)=>s+i.total,0))}). Eles não entram nos totais nem nos rankings.</div>`:'';
   const total=svc.reduce((s,i)=>s+i.total,0);
   const pedidos=new Set(svc.map(i=>i.pedido)).size;
   const secs=groupBy(svc,i=>i.secao);
