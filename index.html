@@ -202,13 +202,58 @@ tbody tr:hover{background:var(--surface-2)}
 :root[data-theme="dark"] .pd.p1 .step{color:#0f140c}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pd.p1 .step{color:#0f140c}}
 
+/* abas de painel */
+.side-label{font-size:10.5px;letter-spacing:.14em;color:var(--side-muted);text-transform:uppercase;padding:0 14px;margin-bottom:-14px}
+.tabs-side{display:flex;flex-direction:column;gap:4px}
+.tabs-side a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-radius:8px;color:var(--side-text);text-decoration:none;font-size:14px;font-weight:600;cursor:pointer;border:1px solid transparent}
+.tabs-side a:hover{background:var(--side-2)}
+.tabs-side a.on{background:var(--brand);color:#16240a;border-color:var(--brand)}
+.tabs-side .cb{font-size:11px;font-weight:700;background:rgba(255,255,255,.12);border-radius:999px;padding:1px 8px}
+.tabs-side a.on .cb{background:rgba(0,0,0,.14)}
+.mtabs{display:none}
+.view{display:flex;flex-direction:column;gap:18px}
+
+/* visitas */
+.row-v{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+tr.vrow{cursor:pointer}
+tr.vrow td:first-child::before{content:"▸";display:inline-block;width:14px;color:var(--muted);transition:transform .15s}
+tr.vrow.open td:first-child::before{transform:rotate(90deg)}
+tr.vrow.open{background:var(--brand-soft)}
+tr.vdet>td{background:var(--surface-2);padding:14px 20px 18px;white-space:normal}
+.vinfo{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:12.5px;color:var(--text-2);margin-bottom:12px}
+.vinfo b{color:var(--text)}
+.mini{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.mini th,.mini td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.mini th{background:var(--surface);font-size:11.5px}
+.mini td.d{white-space:normal;min-width:200px}
+.tp{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px}
+.tp.vis{background:var(--brand-soft);color:var(--brand-ink)}
+.tp.svc{background:#e3eefa;color:#1a5a8c}
+.tp.prd{background:var(--neutral-bg);color:var(--neutral-tx)}
+.vt td.w{white-space:normal;min-width:120px}
+#alerts:empty,#cancelNote:empty{display:none}
+.vcards{display:none}
+.vc{border-top:1px solid var(--border);padding:14px 16px;cursor:pointer}
+.vc.open{background:var(--brand-soft)}
+.vc .h{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--muted)}
+.vc .h b{color:var(--text);font-size:14.5px;font-variant-numeric:tabular-nums}
+.vc .c{font-weight:700;font-size:14.5px;margin:4px 0 2px}
+.vc .d{font-size:13px;color:var(--text-2)}
+.vc .m{font-size:12px;color:var(--muted);margin-top:6px}
+.vc .bd{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.vc .its{margin-top:12px;border-top:1px dashed var(--border);padding-top:10px;display:flex;flex-direction:column;gap:8px}
+.vc .it{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:start;font-size:12.5px}
+.vc .it b{font-variant-numeric:tabular-nums}
+.vc .it small{color:var(--muted)}
+.conv{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--good-bg);color:var(--good-tx);margin-left:6px}
+
 /* tooltip */
 #tip{position:fixed;pointer-events:none;background:#23272b;color:#fff;font-size:12px;padding:7px 10px;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:10;opacity:0;transition:opacity .08s;max-width:260px}
 #tip b{display:block}
 
 /* responsivo */
 @media (max-width:1100px){
-  .row-a,.row-c,.row-p{grid-template-columns:1fr}
+  .row-a,.row-c,.row-p,.row-v{grid-template-columns:1fr}
   .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:820px){
@@ -228,6 +273,12 @@ tbody tr:hover{background:var(--surface-2)}
   .sec .track{grid-column:1 / -1;grid-row:2}
   .sec .pct{display:none}
   .hide-m{display:none}
+  #visPedidos .scroll{display:none}
+  .vcards{display:block}
+  .mtabs{display:flex;gap:6px;padding:12px 16px 0;background:var(--bg)}
+  .mtabs button{flex:1;font:inherit;font-size:13px;font-weight:600;border:1px solid var(--border);background:var(--surface);color:var(--text-2);border-radius:999px;padding:8px 10px;cursor:pointer}
+  .mtabs button.on{background:var(--brand-strong);border-color:var(--brand-strong);color:#fff}
+  .side-label,.tabs-side{display:none}
   td.desc{min-width:170px}
   .podium{gap:8px;padding:12px 14px 0}
   .pd .nm{font-size:12.5px}
@@ -248,6 +299,17 @@ tbody tr:hover{background:var(--surface-2)}
       <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1d20" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.4-.4-2.4z"/></svg></div>
       <div><b>SERVIÇOS</b><small>Painel do dia</small></div>
     </div>
+    <div class="side-label">Painéis</div>
+    <div class="tabs-side" id="tabsSide">
+      <a data-view="serv" class="on">Serviços do dia</a>
+      <a data-view="vis">Visitas técnicas <span class="cb" id="visCount">0</span></a>
+    </div>
+    <div class="side-label">Nesta página</div>
+    <nav id="navVis" class="hidden">
+      <a href="#visResumo" class="on">Resumo</a>
+      <a href="#visGrupos">Seções e vendedores</a>
+      <a href="#visPedidos">Pedidos com visita</a>
+    </nav>
     <nav id="nav">
       <a href="#visao" class="on">Visão geral</a>
       <a href="#podios">Pódios</a>
@@ -266,7 +328,7 @@ tbody tr:hover{background:var(--surface-2)}
   <main>
     <div class="top">
       <div>
-        <h1>Painel de Serviços do Dia</h1>
+        <h1 id="pageTitle">Painel de Serviços do Dia</h1>
         <p id="subtitle">Serviços vendidos por seção • leitura direta da exportação de pedidos</p>
       </div>
       <div class="actions hidden" id="actions">
@@ -277,6 +339,7 @@ tbody tr:hover{background:var(--surface-2)}
       </div>
     </div>
 
+    <div class="mtabs hidden" id="mtabs"><button data-view="serv" class="on">Serviços do dia</button><button data-view="vis">Visitas técnicas</button></div>
     <div class="content">
       <section id="upload">
         <div class="drop" id="drop" tabindex="0" role="button" aria-label="Selecionar planilha">
@@ -291,6 +354,8 @@ tbody tr:hover{background:var(--surface-2)}
       <div id="dash" class="hidden" style="display:flex;flex-direction:column;gap:18px">
         <div id="alerts"></div>
         <div id="cancelNote"></div>
+
+        <div id="viewServ" class="view">
 
         <div class="kpis" id="visao">
           <div class="card kpi"><div class="l">Total em serviços</div><div class="v" id="kTotal">–</div><div class="s"><span id="kTotalS"></span></div></div>
@@ -350,6 +415,37 @@ tbody tr:hover{background:var(--surface-2)}
             </div>
             <div class="card-f" id="listFoot"></div>
         </div>
+        </div>
+
+        <div id="viewVis" class="view hidden">
+          <div class="kpis" id="visResumo">
+            <div class="card kpi"><div class="l">Visitas vendidas</div><div class="v" id="vQtd">–</div><div class="s"><span id="vQtdS"></span></div></div>
+            <div class="card kpi"><div class="l">Valor em visitas</div><div class="v" id="vVal">–</div><div class="s"><span class="badge" id="vValB"></span><span>valor médio por visita</span></div></div>
+            <div class="card kpi"><div class="l">Valor dos pedidos</div><div class="v" id="vPed">–</div><div class="s"><span class="badge" id="vPedB"></span><span>ticket médio do pedido</span></div></div>
+            <div class="card kpi"><div class="l">Já com instalação</div><div class="v" id="vConv">–</div><div class="s"><span class="badge" id="vConvB"></span><span>dos pedidos já trazem outro serviço</span></div></div>
+          </div>
+          <div class="row row-v" id="visGrupos">
+            <div class="card">
+              <div class="card-h"><div><h2>Visitas por seção</h2><p>Quantidade de visitas vendidas em cada seção</p></div></div>
+              <div class="hbars" id="visSecs" style="padding-bottom:18px"></div>
+            </div>
+            <div class="card">
+              <div class="card-h"><div><h2>Visitas por vendedor</h2><p>Quem vendeu visitas técnicas no dia</p></div></div>
+              <div class="hbars" id="visSellers" style="padding-bottom:18px"></div>
+            </div>
+          </div>
+          <div class="card" id="visPedidos">
+            <div class="card-h"><div><h2>Pedidos com visita técnica</h2><p>Clique num pedido para ver todos os itens dele</p></div></div>
+            <div class="scroll" style="margin-top:8px">
+              <table class="vt">
+                <thead><tr><th>Pedido</th><th>Cliente</th><th>Visita</th><th>Vendedor</th><th>Data prevista</th><th>Status</th><th class="num">Valor do pedido</th></tr></thead>
+                <tbody id="visBody"></tbody>
+              </table>
+            </div>
+            <div class="vcards" id="visCards"></div>
+            <div class="card-f" id="visFoot"></div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -382,7 +478,7 @@ const cap = s => String(s).toLowerCase().replace(/(^|\s)\S/g, c=>c.toUpperCase()
 function secInfo(s){ const n = SECOES[norm(s)]; return n ? {cod:'S'+n[0], nome:n[1]} : {cod:'', nome:cap(s)}; }
 const secLabel = s => secInfo(s).nome;
 
-let ALL=[], ORDERS={}, FILE='', CHECK={ok:0,total:0,skipped:0}, state={date:null, chan:'Todos', sec:null};
+let ALL=[], ORDERS={}, FILE='', CHECK={ok:0,total:0,skipped:0}, state={date:null, chan:'Todos', sec:null, view:'serv'};
 
 /* ---------- leitura do arquivo ---------- */
 const drop=$('drop'), fileIn=$('file');
@@ -458,13 +554,14 @@ function process(rows){
     const k=findItemStart(r); if(k<0){ skipped++; continue; }
     const it={
       date, statusPedido:r[1]??'', canal:String(r[2]??'').split('/').pop().trim()||'Outro',
-      pedido:String(r[3]??'').trim(), valorPedido:toNum(r[4]), cliente:r[5]??'',
+      pedido:String(r[3]??'').trim(), valorPedido:toNum(r[4]), cliente:r[5]??'', doc:r[6]??'',
       lm:String(r[k]).trim(), desc:String(r[k+1]??''), secao:String(r[k+2]??'SEM SEÇÃO').trim(),
       statusItem:String(r[k+4]??''), qtd:toNum(r[k+5]), unit:toNum(r[k+6]), total:toNum(r[k+7])||0,
-      entrega:r[k+9]??'', vendedor:String(r[k+11]??''), frete:toNum(r[k+12])||0
+      fluxo:r[k+8]??'', entrega:r[k+9]??'', vendedor:String(r[k+11]??''), frete:toNum(r[k+12])||0
     };
     it.servico=isService(it.statusItem,it.desc);
     it.cancelado=/CANCEL/.test(norm(it.statusPedido))||/CANCEL/.test(norm(it.statusItem));
+    it.visita=it.servico && /VISITA/.test(norm(it.desc));
     it.vendedorNome=cap(it.vendedor.replace(/^\d+\s*-\s*/,'')) || 'Sem vendedor';
     ALL.push(it);
     const o=ORDERS[it.pedido] ||= {soma:0,valor:it.valorPedido};
@@ -482,13 +579,13 @@ function process(rows){
   const dates=[...new Set(ALL.map(i=>i.date))].sort((a,b)=>dateKey(b).localeCompare(dateKey(a)));
   $('dateSel').innerHTML=dates.map(d=>`<option>${d}</option>`).join('');
   $('dateSel').onchange=e=>{ state.date=e.target.value; state.sec=null; render(); };
-  state={date:dates[0],chan:'Todos',sec:null};
+  state={date:dates[0],chan:'Todos',sec:null,view:state.view||'serv'};
 
   const okAll=CHECK.ok===CHECK.total;
   $('sideStatus').innerHTML=`<b><span class="dot"></span>Planilha carregada</b>
     <span class="more"><span class="fname">${esc(FILE)}</span><br>${CHECK.itens} itens lidos<br></span>
     Conferência: <span class="${okAll?'ok':'bad'}">${CHECK.ok}/${CHECK.total} pedidos OK</span>`;
-  $('upload').classList.add('hidden'); $('dash').classList.remove('hidden'); $('actions').classList.remove('hidden');
+  $('upload').classList.add('hidden'); $('dash').classList.remove('hidden'); $('actions').classList.remove('hidden'); $('mtabs').classList.remove('hidden');
   render();
 }
 
@@ -515,7 +612,8 @@ function render(){
   const pedidos=new Set(svc.map(i=>i.pedido)).size;
   const secs=groupBy(svc,i=>i.secao);
   const tops=groupBy(svc,i=>i.lm);
-  $('subtitle').textContent=`Serviços vendidos por seção • ${state.date}${state.chan!=='Todos'?' • '+state.chan:''}`;
+  $('subtitle').textContent=`${state.view==='vis'?'Visitas técnicas vendidas e seus pedidos':'Serviços vendidos por seção'} • ${state.date}${state.chan!=='Todos'?' • '+state.chan:''}`;
+  renderVisitas();
 
   // KPIs
   $('kTotal').textContent=BRL.format(total);
@@ -601,6 +699,76 @@ function render(){
   $('topSvc').innerHTML=tb.map(t=>`<div class="hb" data-tip="<b>${esc(t.itens[0].desc)}</b>Código ${esc(t.k)} • ${BRL.format(t.valor)} • ${t.n} ${t.n===1?'linha':'linhas'}"><div class="t"><span>${esc(t.itens[0].desc)}</span><b>${BRL.format(t.valor)}</b></div><div class="tr"><div style="width:${Math.max(1,t.valor/tmax*100)}%"></div></div></div>`).join('')||'<div class="empty">—</div>';
 }
 
+/* ---------- visitas técnicas ---------- */
+let openOrders=new Set();
+function hbarsHTML(groups,fmt){
+  const mx=groups[0]?.n||1;
+  return groups.map(g=>`<div class="hb" data-tip="<b>${esc(g.label)}</b>${g.n} ${g.n===1?'visita':'visitas'} • ${BRL.format(g.valor)}"><div class="t"><span>${esc(g.label)}</span><b>${g.n} ${g.n===1?'visita':'visitas'}</b></div><div class="tr"><div style="width:${Math.max(2,g.n/mx*100)}%"></div></div></div>`).join('')||'<div class="empty">Nenhuma visita vendida</div>';
+}
+function itemType(i){ return i.visita?'<span class="tp vis">Visita</span>':i.servico?'<span class="tp svc">Serviço</span>':'<span class="tp prd">Produto</span>'; }
+function renderVisitas(){
+  const vis=current().filter(i=>i.visita);
+  $('visCount').textContent=vis.length;
+  const qtd=vis.reduce((s,i)=>s+(i.qtd||1),0);
+  const val=vis.reduce((s,i)=>s+i.total,0);
+  const pedIds=[...new Set(vis.map(i=>i.pedido))];
+  const pedItens=id=>ALL.filter(i=>i.pedido===id);
+  const pedVal=pedIds.reduce((s,id)=>s+(ORDERS[id]?.valor||0),0);
+  const conv=pedIds.filter(id=>pedItens(id).some(i=>i.servico&&!i.visita&&!i.cancelado));
+  $('vQtd').textContent=qtd;
+  $('vQtdS').textContent=`em ${pedIds.length} ${pedIds.length===1?'pedido':'pedidos'} • ${state.date}`;
+  $('vVal').textContent=BRL.format(val);
+  $('vValB').textContent=qtd?BRL.format(val/qtd):'—';
+  $('vPed').textContent=BRL.format(pedVal);
+  $('vPedB').textContent=pedIds.length?BRL0.format(pedVal/pedIds.length):'—';
+  $('vConv').textContent=`${conv.length} de ${pedIds.length}`;
+  $('vConvB').textContent=pedIds.length?PCT(conv.length/pedIds.length):'—';
+
+  const bySec=groupBy(vis,i=>i.secao).map(g=>({label:secLabel(g.k),n:g.itens.reduce((s,i)=>s+(i.qtd||1),0),valor:g.valor})).sort((a,b)=>b.n-a.n||b.valor-a.valor);
+  const bySel=groupBy(vis,i=>i.vendedorNome).map(g=>({label:g.k,n:g.itens.reduce((s,i)=>s+(i.qtd||1),0),valor:g.valor})).sort((a,b)=>b.n-a.n||b.valor-a.valor);
+  $('visSecs').innerHTML=hbarsHTML(bySec);
+  $('visSellers').innerHTML=hbarsHTML(bySel);
+
+  const rows=pedIds.map(id=>{ const its=pedItens(id); const v=vis.filter(i=>i.pedido===id); return {id,its,v,first:v[0],valor:ORDERS[id]?.valor??its.reduce((s,i)=>s+i.total+i.frete,0)}; }).sort((a,b)=>b.valor-a.valor);
+  $('visBody').innerHTML=rows.length?rows.map(r=>{
+    const f=r.first, open=openOrders.has(r.id), temInst=r.its.some(i=>i.servico&&!i.visita&&!i.cancelado);
+    const det=open?`<tr class="vdet"><td colspan="7">
+      <div class="vinfo"><span>Cliente: <b>${esc(f.cliente)}</b></span><span>CPF/CNPJ: <b>${esc(f.doc||'—')}</b></span><span>Canal: <b>${esc(f.canal)}</b></span><span>Status do pedido: <b>${esc(cap(f.statusPedido))}</b></span><span>Vendedor: <b>${esc(f.vendedorNome)}</b></span><span>Fluxo: <b>${esc(f.fluxo||'—')}</b></span><span>Frete: <b>${BRL.format(r.its.reduce((s,i)=>s+i.frete,0))}</b></span></div>
+      <div class="scroll"><table class="mini"><thead><tr><th>Tipo</th><th>Código</th><th>Item</th><th class="hide-m">Seção</th><th class="num">Qtd.</th><th class="num">Valor</th><th class="hide-m">Status</th></tr></thead><tbody>
+      ${r.its.map(i=>`<tr><td>${itemType(i)}</td><td>${esc(i.lm)}</td><td class="d">${esc(i.desc)}</td><td class="hide-m">${esc(secLabel(i.secao))}</td><td class="num">${NUM.format(i.qtd??0)}</td><td class="num"><b>${BRL.format(i.total)}</b></td><td class="hide-m">${esc(statusText(i.statusItem))}</td></tr>`).join('')}
+      </tbody></table></div></td></tr>`:'';
+    return `<tr class="vrow ${open?'open':''}" data-id="${esc(r.id)}">
+      <td>${esc(r.id)}</td><td class="w">${esc(cap(f.cliente))}</td>
+      <td class="desc">${esc(f.desc)}<br><small style="color:var(--muted)">${esc(secLabel(f.secao))}</small>${r.v.length>1?` <span class="tp vis">+${r.v.length-1}</span>`:''}${temInst?'<span class="conv">com instalação</span>':''}</td>
+      <td class="w">${esc(shortName(f.vendedorNome))}</td><td>${esc(f.entrega||'—')}</td>
+      <td><span class="st ${statusClass(f.statusItem)}">${esc(statusText(f.statusItem))}</span></td>
+      <td class="num"><b>${BRL.format(r.valor)}</b><br><small style="color:var(--muted)">${r.its.length} ${r.its.length===1?'item':'itens'}</small></td></tr>${det}`;
+  }).join(''):`<tr><td colspan="7" class="empty">Nenhuma visita técnica vendida neste dia${state.chan!=='Todos'?' neste canal':''}.</td></tr>`;
+  $('visCards').innerHTML=rows.length?rows.map(r=>{
+    const f=r.first, open=openOrders.has(r.id), temInst=r.its.some(i=>i.servico&&!i.visita&&!i.cancelado);
+    return `<div class="vc ${open?'open':''}" data-id="${esc(r.id)}">
+      <div class="h"><span>Pedido ${esc(r.id)} • ${esc(f.canal)}</span><b>${BRL.format(r.valor)}</b></div>
+      <div class="c">${esc(cap(f.cliente))}</div>
+      <div class="d">${esc(f.desc)}${r.v.length>1?` (+${r.v.length-1})`:''}</div>
+      <div class="m">${esc(secLabel(f.secao))} • ${esc(f.vendedorNome)} • previsto ${esc(f.entrega||'—')} • ${r.its.length} ${r.its.length===1?'item':'itens'}</div>
+      <div class="bd"><span class="st ${statusClass(f.statusItem)}">${esc(statusText(f.statusItem))}</span>${temInst?'<span class="conv" style="margin:0">com instalação</span>':''}</div>
+      ${open?`<div class="its">${r.its.map(i=>`<div class="it">${itemType(i)}<span>${esc(i.desc)}<br><small>${esc(i.lm)} • qtd ${NUM.format(i.qtd??0)}</small></span><b>${BRL.format(i.total)}</b></div>`).join('')}<div class="m">CPF/CNPJ ${esc(f.doc||'—')} • ${esc(cap(f.statusPedido))} • frete ${BRL.format(r.its.reduce((s,i)=>s+i.frete,0))}</div></div>`:'<div class="m" style="color:var(--brand-ink);font-weight:600">Toque para ver os itens do pedido</div>'}
+    </div>`;}).join(''):`<div class="empty">Nenhuma visita técnica vendida neste dia.</div>`;
+  $('visCards').querySelectorAll('.vc').forEach(el=>el.onclick=()=>{ const id=el.dataset.id; openOrders.has(id)?openOrders.delete(id):openOrders.add(id); renderVisitas(); });
+  $('visBody').querySelectorAll('tr.vrow').forEach(tr=>tr.onclick=()=>{ const id=tr.dataset.id; openOrders.has(id)?openOrders.delete(id):openOrders.add(id); renderVisitas(); });
+  $('visFoot').textContent=rows.length?`${rows.length} ${rows.length===1?'pedido':'pedidos'} com visita técnica • ${BRL.format(val)} em visitas`:'';
+}
+function setView(v){
+  state.view=v;
+  document.querySelectorAll('[data-view]').forEach(el=>el.classList.toggle('on',el.dataset.view===v));
+  $('viewServ').classList.toggle('hidden',v!=='serv'); $('viewVis').classList.toggle('hidden',v!=='vis');
+  $('nav').classList.toggle('hidden',v!=='serv'); $('navVis').classList.toggle('hidden',v!=='vis');
+  $('pageTitle').textContent=v==='vis'?'Visitas Técnicas do Dia':'Painel de Serviços do Dia';
+  if(ALL.length) render();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('[data-view]').forEach(el=>el.onclick=()=>setView(el.dataset.view));
+
 /* ---------- pódio ---------- */
 function shortName(n){ const p=String(n).split(/\s+/).filter(w=>!/^(de|da|do|dos|das|e)$/i.test(w)); return p.length>1?`${p[0]} ${p[p.length-1]}`:n; }
 function podium(items){
@@ -625,11 +793,24 @@ document.addEventListener('mousemove',e=>{
 });
 
 /* ---------- menu lateral ---------- */
-document.querySelectorAll('#nav a').forEach(a=>a.onclick=()=>{ document.querySelectorAll('#nav a').forEach(x=>x.classList.remove('on')); a.classList.add('on'); });
+document.querySelectorAll('#nav a,#navVis a').forEach(a=>a.onclick=()=>{ a.parentElement.querySelectorAll('a').forEach(x=>x.classList.remove('on')); a.classList.add('on'); });
 
 /* ---------- exportação ---------- */
 const r2=v=>v==null?v:Math.round(v*100)/100;
+function exportVisitas(){
+  const vis=current().filter(i=>i.visita);
+  const ids=[...new Set(vis.map(i=>i.pedido))];
+  const ws=XLSX.utils.json_to_sheet(vis.map(i=>({'Data':i.date,'Pedido':i.pedido,'Canal':i.canal,'Status do Pedido':i.statusPedido,'Cliente':i.cliente,'CPF/CNPJ':i.doc,'Seção':secLabel(i.secao),'Código LM':i.lm,'Visita':i.desc,'Status':i.statusItem,'Quantidade':i.qtd,'Valor da visita':r2(i.total),'Data prevista':i.entrega,'Vendedor':i.vendedor,'Valor total do pedido':r2(ORDERS[i.pedido]?.valor)})));
+  ws['!cols']=[10,12,12,16,28,16,24,12,44,24,10,14,14,40,16].map(w=>({wch:w}));
+  const ws2=XLSX.utils.json_to_sheet(ALL.filter(i=>ids.includes(i.pedido)).map(i=>({'Pedido':i.pedido,'Cliente':i.cliente,'Tipo':i.visita?'Visita':i.servico?'Serviço':'Produto','Código LM':i.lm,'Item':i.desc,'Seção':secLabel(i.secao),'Quantidade':i.qtd,'Valor':r2(i.total),'Status':i.statusItem})));
+  ws2['!cols']=[12,28,10,12,50,24,10,12,24].map(w=>({wch:w}));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Visitas técnicas');
+  XLSX.utils.book_append_sheet(wb,ws2,'Itens dos pedidos');
+  XLSX.writeFile(wb,`visitas_tecnicas_${state.date.replace(/\//g,'-')}${state.chan!=='Todos'?'_'+state.chan:''}.xlsx`);
+}
 function exportXlsx(){
+  if(state.view==='vis') return exportVisitas();
   const svc=current();
   const ws=XLSX.utils.json_to_sheet(svc.map(i=>({
     'Data':i.date,'Pedido':i.pedido,'Canal':i.canal,'Status do Pedido':i.statusPedido,'Cliente':i.cliente,
