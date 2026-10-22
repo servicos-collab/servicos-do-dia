@@ -525,20 +525,31 @@ function toDate(v){
 }
 const dateKey=d=>d.split('/').reverse().join('');
 
-/* A exportação desloca as colunas a partir do código LM (há uma coluna vazia a mais).
-   Por isso cada linha é lida pelo conteúdo: acha o código cujo bloco
-   tem Qtd × Unitário = Valor do item, 5, 6 e 7 colunas depois dele. */
-function findItemStart(r){
+/* Localiza o item em cada linha pelo conteúdo, e não pela posição da coluna.
+   Funciona com os dois formatos de exportação:
+   - antigo (desalinhado): Valor do item 7 colunas depois do código LM;
+   - novo (organizado): Desconto Pontual e Motivo entre o Unitário e o Valor do item (9 colunas depois).
+   O Valor do item é a coluna em que Qtd × Unitário = Valor. As colunas seguintes
+   (fluxo, data, filial, vendedor, frete) são lidas a partir dele. */
+const isCode=v=>/^\d{5,13}$/.test(String(v??'').trim());
+function findItem(r){
   for(let k=5;k<=r.length-8;k++){
-    if(!/^\d{5,13}$/.test(String(r[k]??'').trim())) continue;
-    const q=toNum(r[k+5]),u=toNum(r[k+6]),t=toNum(r[k+7]);
-    if(q===null||u===null||t===null) continue;
-    if(Math.abs(q*u-t)<=Math.max(0.05,Math.abs(t)*0.003)) return k;
+    if(!isCode(r[k])) continue;
+    const q=toNum(r[k+5]),u=toNum(r[k+6]);
+    if(q===null||u===null) continue;
+    for(let t=k+7;t<=Math.min(k+10,r.length-1);t++){
+      const v=toNum(r[t]); if(v===null) continue;
+      if(Math.abs(q*u-v)<=Math.max(0.05,Math.abs(v)*0.003)) return {k,t};
+    }
   }
+  // plano B: código seguido de descrição; Valor = primeira coluna numérica seguida do fluxo (texto)
   for(let k=7;k<r.length-7;k++){
-    if(/^\d{5,13}$/.test(String(r[k]??'').trim()) && typeof r[k+1]==='string' && /[a-zA-Z]{3}/.test(r[k+1]) && toNum(r[k+7])!==null) return k;
+    if(!isCode(r[k]) || typeof r[k+1]!=='string' || !/[a-zA-Z]{3}/.test(r[k+1])) continue;
+    for(let t=k+7;t<=Math.min(k+10,r.length-2);t++){
+      if(toNum(r[t])!==null && typeof r[t+1]==='string' && /[a-zA-Z]/.test(r[t+1])) return {k,t};
+    }
   }
-  return -1;
+  return null;
 }
 function isService(status,desc){
   const s=norm(status);
@@ -551,13 +562,14 @@ function process(rows){
   ALL=[]; ORDERS={}; let skipped=0;
   for(const r of rows){
     const date=toDate(r[0]); if(!date) continue;
-    const k=findItemStart(r); if(k<0){ skipped++; continue; }
+    const pos=findItem(r); if(!pos){ skipped++; continue; }
+    const {k,t}=pos;
     const it={
       date, statusPedido:r[1]??'', canal:String(r[2]??'').split('/').pop().trim()||'Outro',
       pedido:String(r[3]??'').trim(), valorPedido:toNum(r[4]), cliente:r[5]??'', doc:r[6]??'',
       lm:String(r[k]).trim(), desc:String(r[k+1]??''), secao:String(r[k+2]??'SEM SEÇÃO').trim(),
-      statusItem:String(r[k+4]??''), qtd:toNum(r[k+5]), unit:toNum(r[k+6]), total:toNum(r[k+7])||0,
-      fluxo:r[k+8]??'', entrega:r[k+9]??'', vendedor:String(r[k+11]??''), frete:toNum(r[k+12])||0
+      statusItem:String(r[k+4]??''), qtd:toNum(r[k+5]), unit:toNum(r[k+6]), total:toNum(r[t])||0,
+      fluxo:r[t+1]??'', entrega:r[t+2]??'', vendedor:String(r[t+4]??''), frete:toNum(r[t+5])||0
     };
     it.servico=isService(it.statusItem,it.desc);
     it.cancelado=/CANCEL/.test(norm(it.statusPedido))||/CANCEL/.test(norm(it.statusItem));
